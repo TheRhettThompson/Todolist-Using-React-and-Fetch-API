@@ -10,7 +10,7 @@ const Item = ({ list, handleAddToList, url }) => {
   };
 
   const handleKeyDown = async (e) => {
-    if (e.key === "enter" && inputValue !== "") {
+    if (e.key === "Enter" && inputValue !== "") {
       const item = newItem(inputValue);
       const newToDoList = [...list, item];
       handleAddToList(newToDoList);

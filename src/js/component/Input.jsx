@@ -57,12 +57,37 @@ export const Input = () => {
     getUserList();
   }, []);
 
-  const handleRemoveButton = () => {
-    handleAddToList(list.filter((item) => item.id !== toDo.id));
+  const deleteTask = (index) => {
+    const newListOfToDos = list.filter((_, id) => id !== index);
+    addToList(newListOfToDos);
+    fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(newListOfToDos),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log("Response from PUT is not OK");
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        console.log("There was a problem doing PUT ", error);
+      });
   };
 
   const listOfToDos = list.map((task, index) => {
-    return <li key={index}>{task.label}</li>;
+    return (
+      <li key={index}>
+        {task.label}
+        <button id={index} onClick={() => deleteTask(index)}>
+          x
+        </button>
+      </li>
+    );
   });
 
   return (
@@ -75,6 +100,7 @@ export const Input = () => {
             handleAddToList={(value) => addToList(value)}
           />
           {listOfToDos}
+          <li>{list.length}items left</li>
         </ul>
       </div>
     </div>
